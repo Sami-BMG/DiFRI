@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiFRI - Dimensionnement Frigorifique</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Page d'accueil -->
+    <div id="homePage" class="page active home-page-bg">
+        <div class="container">
+            <div class="home-content">
+                <!-- Logo et titre -->
+                <div class="home-header">
+                    <div class="logo-circle">
+                        <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h1>DiFRI</h1>
+                    <p class="subtitle">Dimensionnement frigorifique</p>
+                </div>
+
+                <!-- Carte d'accueil  : -->
+                <div class="welcome-card hero-card">
+                    <div class="hero-content">
+                        <h2 style="color: #1e40af; margin-bottom: 1rem;">🧊 Dimensionnement frigorifique intelligent</h2>
+                        <p style="color: #374151; margin-bottom: 1.5rem; font-size: 1.1rem;">
+                            DiFRI vous aide à calculer avec précision la puissance frigorifique nécessaire 
+                            pour vos chambres froides. Simple, rapide et fiable.
+                        </p>
+                        
+                        <div class="features-grid">
+                            <div class="feature">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                    <path d="M2 17l10 5 10-5"/>
+                                </svg>
+                                <span>Calculs précis</span>
+                            </div>
+                            <div class="feature">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <span>Sauvegarde locale</span>
+                            </div>
+                            <div class="feature">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                </svg>
+                                <span>Interface intuitive</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box" style="margin-top: 1.5rem;">
+                        <p>💾 <strong>Sécurité des données :</strong> Vos calculs sont sauvegardés uniquement sur votre appareil.</p>
+                    </div>
+                </div>
+
+                <!-- Bouton démarrer -->
+                <button class="btn btn-primary btn-large" onclick="startNewCalculation()">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polygon points="10 8 16 12 10 16 10 8"/>
+                    </svg>
+                    Démarrer un nouveau calcul
+                </button>
+
+                <!-- Calculs sauvegardés -->
+                <div id="savedCalculations" class="saved-calculations"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page du formulaire wizard -->
+    <div id="wizardPage" class="page">
+        <div class="container">
+            <div class="wizard-container">
+                <!-- En-tête -->
+                <div class="wizard-header">
+                    <h1>DiFRI - Nouveau calcul</h1>
+                    <div class="progress-info">
+                        <div class="progress-text">
+                            <span>Étape <span id="currentStep">1</span> sur 4</span>
+                            <span><span id="progressPercent">0</span>%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                    </div>
+                    <p id="stepTitle" class="step-title"></p>
+                </div>
+
+                <!-- Contenu des étapes -->
+                <div class="wizard-content">
+                    <!-- Étape 1: Informations générales -->
+                    <div id="step1" class="step active">
+                        <div class="step-header">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="9" y1="3" x2="9" y2="21"/>
+                            </svg>
+                            <h2>Informations générales</h2>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectName">Nom du projet</label>
+                            <input type="text" id="projectName" placeholder="Ex: Chambre froide entrepôt A">
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-label">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                </svg>
+                                <span>Dimensions de la chambre froide</span>
+                            </div>
+                            
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label for="length">Longueur (m)</label>
+                                    <input type="number" id="length" step="0.1" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="width">Largeur (m)</label>
+                                    <input type="number" id="width" step="0.1" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="height">Hauteur (m)</label>
+                                    <input type="number" id="height" step="0.1" min="0" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="section-label">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                                </svg>
+                                <span>Températures</span>
+                            </div>
+                            
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="interiorTemp">Température intérieure (°C)</label>
+                                    <input type="number" id="interiorTemp" step="0.5" placeholder="4">
+                                    <small>Température souhaitée dans la chambre</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exteriorTemp">Température extérieure (°C)</label>
+                                    <input type="number" id="exteriorTemp" step="0.5" placeholder="25">
+                                    <small>Température ambiante moyenne</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <p>💡 <strong>Conseil :</strong> Mesurez précisément votre espace pour obtenir des résultats fiables.</p>
+                        </div>
+                    </div>
+
+                    <!-- Étape 2: Isolation -->
+                    <div id="step2" class="step">
+                        <div class="step-header">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                            <h2>Isolation thermique</h2>
+                        </div>
+
+                        <!-- Murs -->
+                        <div class="insulation-block">
+                            <h3>Murs</h3>
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label for="wallsMaterial">Matériau</label>
+                                    <select id="wallsMaterial">
+                                        <option value="polyurethane">Polyuréthane injecté</option>
+                                        <option value="polystyrene">Polystyrène</option>
+                                        <option value="glasswool">Laine de verre</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="wallsArea">Surface (m²)</label>
+                                    <input type="number" id="wallsArea" step="0.1" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="wallsThickness">Épaisseur (mm)</label>
+                                    <input type="number" id="wallsThickness" step="1" min="0" placeholder="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plafond -->
+                        <div class="insulation-block">
+                            <h3>Plafond</h3>
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label for="ceilingMaterial">Matériau</label>
+                                    <select id="ceilingMaterial">
+                                        <option value="polyurethane">Polyuréthane injecté</option>
+                                        <option value="polystyrene">Polystyrène</option>
+                                        <option value="glasswool">Laine de verre</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ceilingArea">Surface (m²)</label>
+                                    <input type="number" id="ceilingArea" step="0.1" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ceilingThickness">Épaisseur (mm)</label>
+                                    <input type="number" id="ceilingThickness" step="1" min="0" placeholder="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sol -->
+                        <div class="insulation-block">
+                            <h3>Sol</h3>
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label for="floorMaterial">Matériau</label>
+                                    <select id="floorMaterial">
+                                        <option value="polyurethane">Polyuréthane injecté</option>
+                                        <option value="polystyrene">Polystyrène</option>
+                                        <option value="glasswool">Laine de verre</option>
+                                        <option value="handsoil">À main le sol</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="floorArea">Surface (m²)</label>
+                                    <input type="number" id="floorArea" step="0.1" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="floorThickness">Épaisseur (mm)</label>
+                                    <input type="number" id="floorThickness" step="1" min="0" placeholder="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Porte -->
+                        <div class="insulation-block">
+                            <h3>Porte</h3>
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label for="doorMaterial">Matériau</label>
+                                    <select id="doorMaterial">
+                                        <option value="polyurethane">Polyuréthane injecté</option>
+                                        <option value="polystyrene">Polystyrène</option>
+                                        <option value="glasswool">Laine de verre</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="doorArea">Surface (m²)</label>
+                                    <input type="number" id="doorArea" step="0.1" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="doorThickness">Épaisseur (mm)</label>
+                                    <input type="number" id="doorThickness" step="1" min="0" placeholder="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <p>💡 <strong>Conseil :</strong> Une bonne isolation réduit les coûts énergétiques. Le polyuréthane offre généralement les meilleures performances.</p>
+                        </div>
+                    </div>
+
+                    <!-- Étape 3: Produits -->
+                    <div id="step3" class="step">
+                        <div class="step-header">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                            <h2>Produits stockés</h2>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="productType">Type de produit</label>
+                            <select id="productType">
+                                <option value="fruits">Fruits frais</option>
+                                <option value="vegetables">Légumes</option>
+                                <option value="meat">Viande</option>
+                                <option value="fish">Poisson</option>
+                                <option value="dairy">Produits laitiers</option>
+                                <option value="frozen">Produits surgelés</option>
+                                <option value="other">Autre</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantity">Quantité (kg)</label>
+                            <input type="number" id="quantity" step="1" min="0" placeholder="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="entryTemp">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                                </svg>
+                                Température d'entrée du produit (°C)
+                            </label>
+                            <input type="number" id="entryTemp" step="0.5" placeholder="15">
+                            <small>Température du produit avant son entrée dans la chambre froide</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="openingFrequency">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <path d="M15 3v18"/>
+                                    <circle cx="8" cy="12" r="1"/>
+                                </svg>
+                                Fréquence d'ouverture (ouvertures/jour)
+                            </label>
+                            <input type="number" id="openingFrequency" step="1" min="0" placeholder="10">
+                            <small>Nombre moyen d'ouvertures de la porte par jour</small>
+                        </div>
+
+                        <!-- Charges personnel -->
+                        <div class="insulation-block">
+                            <div class="section-label">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                <h3>Charges liées au personnel</h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="personnelNumber">Nombre</label>
+                                <input type="number" id="personnelNumber" step="1" min="0" placeholder="0">
+                            </div>
+                        </div>
+
+                        <!-- Charges éclairage -->
+                        <div class="insulation-block">
+                            <div class="section-label">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="3"/>
+                                    <line x1="12" y1="21" x2="12" y2="23"/>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                    <line x1="1" y1="12" x2="3" y2="12"/>
+                                    <line x1="21" y1="12" x2="23" y2="12"/>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                                    <circle cx="12" cy="12" r="5"/>
+                                </svg>
+                                <h3>Charges liées à l'éclairage</h3>
+                            </div>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="lightingNumber">Nombre</label>
+                                    <input type="number" id="lightingNumber" step="1" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lightingPower">Puissance unitaire (W)</label>
+                                    <input type="number" id="lightingPower" step="1" min="0" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <p>💡 <strong>Conseil :</strong> Pour une estimation précise, basez-vous sur les données réelles de votre exploitation ou sur les recommandations du fabricant.</p>
+                        </div>
+                    </div>
+
+                    <!-- Étape 4: Validation -->
+                    <div id="step4" class="step">
+                        <div class="step-header">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 11l3 3L22 4"/>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                            </svg>
+                            <h2>Récapitulatif</h2>
+                        </div>
+
+                        <div id="validationSummary"></div>
+
+                        <div class="info-box">
+                            <p>💡 <strong>Conseil :</strong> Vérifiez attentivement les données avant de calculer. Vous pourrez revenir en arrière si nécessaire.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="wizard-navigation">
+                    <button id="btnPrevious" class="btn btn-outline" onclick="previousStep()">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                        Précédent
+                    </button>
+                    <button id="btnNext" class="btn btn-primary" onclick="nextStep()">
+                        Suivant
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </button>
+                    <button id="btnCalculate" class="btn btn-primary" onclick="calculateResults()" style="display: none;">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Calculer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page des résultats -->
+    <div id="resultsPage" class="page">
+        <div class="container">
+            <div class="results-container">
+                <!-- En-tête -->
+                <div class="results-header">
+                    <div class="results-title">
+                        <div class="logo-small">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1>Résultats du calcul</h1>
+                            <p id="projectNameDisplay"></p>
+                        </div>
+                    </div>
+                    <div class="results-actions">
+                        <button class="btn btn-outline" onclick="window.print()">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"/>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                <rect x="6" y="14" width="12" height="8"/>
+                            </svg>
+                            Imprimer / Exporter
+                        </button>
+                        <button class="btn btn-primary" onclick="goHome()">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            </svg>
+                            Nouveau calcul
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Puissance totale -->
+                <div class="total-power">
+                    <div class="card-header">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="20" x2="12" y2="10"/>
+                            <line x1="18" y1="20" x2="18" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="16"/>
+                        </svg>
+                        Puissance frigorifique totale nécessaire
+                    </div>
+                    <div class="power-value" id="totalPower">0.00 kW</div>
+                    <p class="power-subtitle">Basé sur les paramètres saisis</p>
+                </div>
+
+                <!-- Graphique et tableau -->
+                <div class="results-grid">
+                    <!-- Graphique -->
+                    <div class="card">
+                        <div class="card-header">Répartition des besoins frigorifiques</div>
+                        <div class="chart-container">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Tableau -->
+                    <div class="card">
+                        <div class="card-header">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                            Tableau récapitulatif
+                        </div>
+                        <table class="results-table" id="resultsTable">
+                            <thead>
+                                <tr>
+                                    <th>Poste</th>
+                                    <th class="text-right">Puissance (kW)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Détails du projet -->
+                <div class="card">
+                    <div class="card-header">Détails du projet</div>
+                    <div class="details-grid" id="projectDetails"></div>
+                </div>
+
+                <!-- Note pédagogique -->
+                <div class="info-box">
+                    <p>📚 <strong>Note :</strong> Ces résultats sont basés sur des formules simplifiées pour le dimensionnement d'une chambre frigorifique intérieure.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
