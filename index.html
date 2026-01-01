@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="styles.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Icônes Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Page d'accueil -->
@@ -16,64 +18,55 @@
                 <!-- Logo et titre -->
                 <div class="home-header">
                     <div class="logo-circle">
-                        <svg class="icon-large" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
-                        </svg>
+                        <i class="fas fa-snowflake fa-2x"></i>
                     </div>
                     <h1>DiFRI</h1>
-                    <p class="subtitle">Dimensionnement frigorifique</p>
+                    <p class="subtitle">Dimensionnement Frigorifique Intelligent</p>
                 </div>
 
-                <!-- Carte d'accueil  : -->
+                <!-- Carte d'accueil -->
                 <div class="welcome-card hero-card">
                     <div class="hero-content">
-                        <h2 style="color: #1e40af; margin-bottom: 1rem;">🧊 Dimensionnement frigorifique intelligent</h2>
-                        <p style="color: #374151; margin-bottom: 1.5rem; font-size: 1.1rem;">
-                            DiFRI vous aide à calculer avec précision la puissance frigorifique nécessaire 
-                            pour vos chambres froides. Simple, rapide et fiable.
+                        <h2><i class="fas fa-calculator"></i> Dimensionnement Frigorifique Précis</h2>
+                        <p class="hero-description">
+                            Calculez la puissance frigorifique nécessaire pour vos chambres froides avec des formules validées par les professionnels du froid.
                         </p>
                         
                         <div class="features-grid">
                             <div class="feature">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                    <path d="M2 17l10 5 10-5"/>
-                                </svg>
-                                <span>Calculs précis</span>
+                                <i class="fas fa-thermometer-half"></i>
+                                <span>Formules thermiques réelles</span>
                             </div>
                             <div class="feature">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="12" cy="7" r="4"/>
-                                </svg>
-                                <span>Sauvegarde locale</span>
+                                <i class="fas fa-database"></i>
+                                <span>Sauvegarde automatique</span>
                             </div>
                             <div class="feature">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                                </svg>
-                                <span>Interface intuitive</span>
+                                <i class="fas fa-chart-pie"></i>
+                                <span>Visualisation graphique</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="info-box" style="margin-top: 1.5rem;">
-                        <p>💾 <strong>Sécurité des données :</strong> Vos calculs sont sauvegardés uniquement sur votre appareil.</p>
+                    <div class="info-card">
+                        <i class="fas fa-info-circle"></i>
+                        <p><strong>Formules professionnelles :</strong> Calculs basés sur les normes du génie frigorifique avec gestion complète de la congélation.</p>
                     </div>
                 </div>
 
                 <!-- Bouton démarrer -->
                 <button class="btn btn-primary btn-large" onclick="startNewCalculation()">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polygon points="10 8 16 12 10 16 10 8"/>
-                    </svg>
+                    <i class="fas fa-play-circle"></i>
                     Démarrer un nouveau calcul
                 </button>
 
                 <!-- Calculs sauvegardés -->
-                <div id="savedCalculations" class="saved-calculations"></div>
+                <div id="savedCalculations" class="saved-calculations">
+                    <h3><i class="fas fa-history"></i> Calculs récents</h3>
+                    <div id="savedList" class="saved-list">
+                        <!-- Les calculs apparaîtront ici -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -84,17 +77,23 @@
             <div class="wizard-container">
                 <!-- En-tête -->
                 <div class="wizard-header">
-                    <h1>DiFRI - Nouveau calcul</h1>
+                    <div class="wizard-title">
+                        <h1><i class="fas fa-calculator"></i> DiFRI - Nouveau calcul</h1>
+                        <button class="btn btn-outline btn-sm" onclick="goHome()">
+                            <i class="fas fa-home"></i> Accueil
+                        </button>
+                    </div>
+                    
                     <div class="progress-info">
                         <div class="progress-text">
                             <span>Étape <span id="currentStep">1</span> sur 4</span>
-                            <span><span id="progressPercent">0</span>%</span>
+                            <span><span id="progressPercent">0</span>% complété</span>
                         </div>
                         <div class="progress-bar">
                             <div id="progressFill" class="progress-fill"></div>
                         </div>
                     </div>
-                    <p id="stepTitle" class="step-title"></p>
+                    <p id="stepTitle" class="step-title">Définissez les caractéristiques de base</p>
                 </div>
 
                 <!-- Contenu des étapes -->
@@ -102,291 +101,248 @@
                     <!-- Étape 1: Informations générales -->
                     <div id="step1" class="step active">
                         <div class="step-header">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                <line x1="9" y1="3" x2="9" y2="21"/>
-                            </svg>
+                            <i class="fas fa-info-circle"></i>
                             <h2>Informations générales</h2>
                         </div>
 
                         <div class="form-group">
-                            <label for="projectName">Nom du projet</label>
-                            <input type="text" id="projectName" placeholder="Ex: Chambre froide entrepôt A">
+                            <label for="projectName"><i class="fas fa-project-diagram"></i> Nom du projet</label>
+                            <input type="text" id="projectName" placeholder="Ex: Chambre froide restaurant">
                         </div>
 
-                        <div class="form-section">
-                            <div class="section-label">
-                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                                </svg>
-                                <span>Dimensions de la chambre froide</span>
-                            </div>
-                            
+                        <div class="card-section">
+                            <h3><i class="fas fa-ruler-combined"></i> Dimensions de la chambre</h3>
                             <div class="form-grid-3">
                                 <div class="form-group">
                                     <label for="length">Longueur (m)</label>
-                                    <input type="number" id="length" step="0.1" min="0" placeholder="0">
+                                    <input type="number" id="length" step="0.1" min="0.1" placeholder="5.0">
                                 </div>
                                 <div class="form-group">
                                     <label for="width">Largeur (m)</label>
-                                    <input type="number" id="width" step="0.1" min="0" placeholder="0">
+                                    <input type="number" id="width" step="0.1" min="0.1" placeholder="3.0">
                                 </div>
                                 <div class="form-group">
                                     <label for="height">Hauteur (m)</label>
-                                    <input type="number" id="height" step="0.1" min="0" placeholder="0">
+                                    <input type="number" id="height" step="0.1" min="0.1" placeholder="2.5">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-section">
-                            <div class="section-label">
-                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
-                                </svg>
-                                <span>Températures</span>
-                            </div>
-                            
+                        <div class="card-section">
+                            <h3><i class="fas fa-thermometer-half"></i> Températures de référence</h3>
                             <div class="form-grid-2">
                                 <div class="form-group">
                                     <label for="interiorTemp">Température intérieure (°C)</label>
-                                    <input type="number" id="interiorTemp" step="0.5" placeholder="4">
+                                    <input type="number" id="interiorTemp" step="0.5" value="4" placeholder="4">
                                     <small>Température souhaitée dans la chambre</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="exteriorTemp">Température extérieure (°C)</label>
-                                    <input type="number" id="exteriorTemp" step="0.5" placeholder="25">
+                                    <input type="number" id="exteriorTemp" step="0.5" value="25" placeholder="25">
                                     <small>Température ambiante moyenne</small>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="info-box">
-                            <p>💡 <strong>Conseil :</strong> Mesurez précisément votre espace pour obtenir des résultats fiables.</p>
+                        <div class="info-card">
+                            <i class="fas fa-lightbulb"></i>
+                            <p><strong>Astuce :</strong> Mesurez précisément votre espace. Les surfaces seront calculées automatiquement.</p>
                         </div>
                     </div>
 
-                    <!-- Étape 2: Isolation -->
+                    <!-- Étape 2: Caractéristiques thermiques -->
                     <div id="step2" class="step">
                         <div class="step-header">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                            </svg>
-                            <h2>Isolation thermique</h2>
+                            <i class="fas fa-layer-group"></i>
+                            <h2>Caractéristiques thermiques</h2>
                         </div>
 
-                        <!-- Murs -->
-                        <div class="insulation-block">
-                            <h3>Murs</h3>
-                            <div class="form-grid-3">
+                        <!-- Coefficients thermiques -->
+                        <div class="card-section">
+                            <h3><i class="fas fa-sliders-h"></i> Coefficients thermiques (W/m².K)</h3>
+                            <div class="coefficients-grid">
                                 <div class="form-group">
-                                    <label for="wallsMaterial">Matériau</label>
-                                    <select id="wallsMaterial">
-                                        <option value="polyurethane">Polyuréthane injecté</option>
-                                        <option value="polystyrene">Polystyrène</option>
-                                        <option value="glasswool">Laine de verre</option>
-                                    </select>
+                                    <label for="k1">k1 - Murs extérieurs</label>
+                                    <input type="number" id="k1" step="0.01" value="0.45" placeholder="0.45">
                                 </div>
                                 <div class="form-group">
-                                    <label for="wallsArea">Surface (m²)</label>
-                                    <input type="number" id="wallsArea" step="0.1" min="0" placeholder="0">
+                                    <label for="k2">k2 - Isolation</label>
+                                    <input type="number" id="k2" step="0.01" value="0.23" placeholder="0.23">
                                 </div>
                                 <div class="form-group">
-                                    <label for="wallsThickness">Épaisseur (mm)</label>
-                                    <input type="number" id="wallsThickness" step="1" min="0" placeholder="100">
+                                    <label for="k3">k3 - Revêtement intérieur</label>
+                                    <input type="number" id="k3" step="0.01" value="0.12" placeholder="0.12">
+                                </div>
+                                <div class="form-group">
+                                    <label for="k4">k4 - Air intérieur</label>
+                                    <input type="number" id="k4" step="0.01" value="0.16" placeholder="0.16">
+                                </div>
+                                <div class="form-group">
+                                    <label for="k5">k5 - Air extérieur</label>
+                                    <input type="number" id="k5" step="0.01" value="0.04" placeholder="0.04">
+                                </div>
+                                <div class="form-group">
+                                    <label for="k6">k6 - Divers</label>
+                                    <input type="number" id="k6" step="0.01" value="0.05" placeholder="0.05">
+                                </div>
+                            </div>
+                            <div class="kt-display">
+                                <strong>Kt total : <span id="ktValue">1.05</span> W/m².K</strong>
+                            </div>
+                        </div>
+
+                        <!-- Surfaces -->
+                        <div class="card-section">
+                            <h3><i class="fas fa-border-style"></i> Surfaces (m²)</h3>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="wallsSurface">Surface des parois</label>
+                                    <input type="number" id="wallsSurface" step="0.1" readonly>
+                                    <small>Calculée automatiquement</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ceilingSurface">Surface du plafond</label>
+                                    <input type="number" id="ceilingSurface" step="0.1" readonly>
+                                    <small>Calculée automatiquement</small>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Plafond -->
-                        <div class="insulation-block">
-                            <h3>Plafond</h3>
+                        <!-- Vitrage -->
+                        <div class="card-section">
+                            <h3><i class="fas fa-window-maximize"></i> Vitrage (optionnel)</h3>
                             <div class="form-grid-3">
                                 <div class="form-group">
-                                    <label for="ceilingMaterial">Matériau</label>
-                                    <select id="ceilingMaterial">
-                                        <option value="polyurethane">Polyuréthane injecté</option>
-                                        <option value="polystyrene">Polystyrène</option>
-                                        <option value="glasswool">Laine de verre</option>
+                                    <label for="glazingType">Type de vitrage</label>
+                                    <select id="glazingType">
+                                        <option value="none">Aucun vitrage</option>
+                                        <option value="single">Simple vitrage</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="ceilingArea">Surface (m²)</label>
-                                    <input type="number" id="ceilingArea" step="0.1" min="0" placeholder="0">
+                                    <label for="glazingArea">Surface (m²)</label>
+                                    <input type="number" id="glazingArea" step="0.1" min="0" value="0" placeholder="0">
                                 </div>
                                 <div class="form-group">
-                                    <label for="ceilingThickness">Épaisseur (mm)</label>
-                                    <input type="number" id="ceilingThickness" step="1" min="0" placeholder="100">
+                                    <label for="glazingU">Coefficient U (W/m².K)</label>
+                                    <input type="number" id="glazingU" step="0.1" value="5.7" placeholder="5.7">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Sol -->
-                        <div class="insulation-block">
-                            <h3>Sol</h3>
-                            <div class="form-grid-3">
-                                <div class="form-group">
-                                    <label for="floorMaterial">Matériau</label>
-                                    <select id="floorMaterial">
-                                        <option value="polyurethane">Polyuréthane injecté</option>
-                                        <option value="polystyrene">Polystyrène</option>
-                                        <option value="glasswool">Laine de verre</option>
-                                        <option value="handsoil">À main le sol</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="floorArea">Surface (m²)</label>
-                                    <input type="number" id="floorArea" step="0.1" min="0" placeholder="0">
-                                </div>
-                                <div class="form-group">
-                                    <label for="floorThickness">Épaisseur (mm)</label>
-                                    <input type="number" id="floorThickness" step="1" min="0" placeholder="100">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Porte -->
-                        <div class="insulation-block">
-                            <h3>Porte</h3>
-                            <div class="form-grid-3">
-                                <div class="form-group">
-                                    <label for="doorMaterial">Matériau</label>
-                                    <select id="doorMaterial">
-                                        <option value="polyurethane">Polyuréthane injecté</option>
-                                        <option value="polystyrene">Polystyrène</option>
-                                        <option value="glasswool">Laine de verre</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="doorArea">Surface (m²)</label>
-                                    <input type="number" id="doorArea" step="0.1" min="0" placeholder="0">
-                                </div>
-                                <div class="form-group">
-                                    <label for="doorThickness">Épaisseur (mm)</label>
-                                    <input type="number" id="doorThickness" step="1" min="0" placeholder="100">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="info-box">
-                            <p>💡 <strong>Conseil :</strong> Une bonne isolation réduit les coûts énergétiques. Le polyuréthane offre généralement les meilleures performances.</p>
+                        <div class="info-card">
+                            <i class="fas fa-lightbulb"></i>
+                            <p><strong>Formule :</strong> Q = 24 × Surface × Kt × ΔT (Wh/jour). Kt = k1 + k2 + k3 + k4 + k5 + k6</p>
                         </div>
                     </div>
 
-                    <!-- Étape 3: Produits -->
+                    <!-- Étape 3: Produits et charges -->
                     <div id="step3" class="step">
                         <div class="step-header">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                            </svg>
-                            <h2>Produits stockés</h2>
+                            <i class="fas fa-apple-alt"></i>
+                            <h2>Produits et charges internes</h2>
                         </div>
 
-                        <div class="form-group">
-                            <label for="productType">Type de produit</label>
-                            <select id="productType">
-                                <option value="fruits">Fruits frais</option>
-                                <option value="vegetables">Légumes</option>
-                                <option value="meat">Viande</option>
-                                <option value="fish">Poisson</option>
-                                <option value="dairy">Produits laitiers</option>
-                                <option value="frozen">Produits surgelés</option>
-                                <option value="other">Autre</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="quantity">Quantité (kg)</label>
-                            <input type="number" id="quantity" step="1" min="0" placeholder="0">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="entryTemp">
-                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
-                                </svg>
-                                Température d'entrée du produit (°C)
-                            </label>
-                            <input type="number" id="entryTemp" step="0.5" placeholder="15">
-                            <small>Température du produit avant son entrée dans la chambre froide</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="openingFrequency">
-                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                    <path d="M15 3v18"/>
-                                    <circle cx="8" cy="12" r="1"/>
-                                </svg>
-                                Fréquence d'ouverture (ouvertures/jour)
-                            </label>
-                            <input type="number" id="openingFrequency" step="1" min="0" placeholder="10">
-                            <small>Nombre moyen d'ouvertures de la porte par jour</small>
-                        </div>
-
-                        <!-- Charges personnel -->
-                        <div class="insulation-block">
-                            <div class="section-label">
-                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="9" cy="7" r="4"/>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                </svg>
-                                <h3>Charges liées au personnel</h3>
-                            </div>
-                            <div class="form-group">
-                                <label for="personnelNumber">Nombre</label>
-                                <input type="number" id="personnelNumber" step="1" min="0" placeholder="0">
-                            </div>
-                        </div>
-
-                        <!-- Charges éclairage -->
-                        <div class="insulation-block">
-                            <div class="section-label">
-                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="12" y1="1" x2="12" y2="3"/>
-                                    <line x1="12" y1="21" x2="12" y2="23"/>
-                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                                    <line x1="1" y1="12" x2="3" y2="12"/>
-                                    <line x1="21" y1="12" x2="23" y2="12"/>
-                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                                    <circle cx="12" cy="12" r="5"/>
-                                </svg>
-                                <h3>Charges liées à l'éclairage</h3>
-                            </div>
+                        <!-- Produits -->
+                        <div class="card-section">
+                            <h3><i class="fas fa-box-open"></i> Caractéristiques des produits</h3>
                             <div class="form-grid-2">
                                 <div class="form-group">
-                                    <label for="lightingNumber">Nombre</label>
-                                    <input type="number" id="lightingNumber" step="1" min="0" placeholder="0">
+                                    <label for="productType">Type de produit</label>
+                                    <select id="productType">
+                                        <option value="fruits">Fruits frais</option>
+                                        <option value="vegetables">Légumes</option>
+                                        <option value="meat">Viande</option>
+                                        <option value="fish">Poisson</option>
+                                        <option value="dairy">Produits laitiers</option>
+                                        <option value="frozen">Produits surgelés</option>
+                                        <option value="other">Autre</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="lightingPower">Puissance unitaire (W)</label>
-                                    <input type="number" id="lightingPower" step="1" min="0" placeholder="0">
+                                    <label for="quantity">Quantité (kg)</label>
+                                    <input type="number" id="quantity" step="1" min="0" value="100" placeholder="100">
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label for="entryTemp">Température d'entrée (°C)</label>
+                                    <input type="number" id="entryTemp" step="0.5" value="15" placeholder="15">
+                                </div>
+                                <div class="form-group">
+                                    <label for="freezingPoint">Point de congélation (°C)</label>
+                                    <input type="number" id="freezingPoint" step="0.5" value="0" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productPower">Puissance estimée</label>
+                                    <div class="result-preview" id="productPowerPreview">0.00 kW</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="info-box">
-                            <p>💡 <strong>Conseil :</strong> Pour une estimation précise, basez-vous sur les données réelles de votre exploitation ou sur les recommandations du fabricant.</p>
+                        <!-- Coefficients produit -->
+                        <div class="card-section">
+                            <h3><i class="fas fa-atom"></i> Coefficients thermiques du produit</h3>
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label for="cpAbove">Cp au-dessus congélation (kJ/kg.K)</label>
+                                    <input type="number" id="cpAbove" step="0.01" value="3.8" placeholder="3.8">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpBelow">Cp en-dessous congélation (kJ/kg.K)</label>
+                                    <input type="number" id="cpBelow" step="0.01" value="1.9" placeholder="1.9">
+                                </div>
+                                <div class="form-group">
+                                    <label for="latentHeat">Chaleur latente (kJ/kg)</label>
+                                    <input type="number" id="latentHeat" step="1" value="250" placeholder="250">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charges internes -->
+                        <div class="card-section">
+                            <h3><i class="fas fa-bolt"></i> Charges internes</h3>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="personnelNumber"><i class="fas fa-users"></i> Personnel (116 W/pers)</label>
+                                    <input type="number" id="personnelNumber" step="1" min="0" value="1" placeholder="1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lightingPower"><i class="fas fa-lightbulb"></i> Éclairage total (W)</label>
+                                    <input type="number" id="lightingPower" step="1" min="0" value="100" placeholder="100">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <i class="fas fa-lightbulb"></i>
+                            <p><strong>Calcul produit :</strong> Gestion complète de la congélation avec chaleur latente et Cp différents selon la température.</p>
                         </div>
                     </div>
 
                     <!-- Étape 4: Validation -->
                     <div id="step4" class="step">
                         <div class="step-header">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 11l3 3L22 4"/>
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                            </svg>
-                            <h2>Récapitulatif</h2>
+                            <i class="fas fa-clipboard-check"></i>
+                            <h2>Validation et calcul</h2>
                         </div>
 
-                        <div id="validationSummary"></div>
+                        <div id="validationSummary" class="validation-summary">
+                            <!-- Récapitulatif généré dynamiquement -->
+                        </div>
 
-                        <div class="info-box">
-                            <p>💡 <strong>Conseil :</strong> Vérifiez attentivement les données avant de calculer. Vous pourrez revenir en arrière si nécessaire.</p>
+                        <div class="power-preview">
+                            <h3><i class="fas fa-bolt"></i> Estimation de puissance</h3>
+                            <div class="preview-value" id="powerPreview">0.00 kW</div>
+                            <button class="btn btn-outline btn-sm" onclick="previewCalculation()">
+                                <i class="fas fa-sync-alt"></i> Prévisualiser
+                            </button>
+                        </div>
+
+                        <div class="info-card">
+                            <i class="fas fa-lightbulb"></i>
+                            <p><strong>Vérification :</strong> Tous les calculs respectent les formules professionnelles du génie frigorifique.</p>
                         </div>
                     </div>
                 </div>
@@ -394,25 +350,19 @@
                 <!-- Navigation -->
                 <div class="wizard-navigation">
                     <button id="btnPrevious" class="btn btn-outline" onclick="previousStep()">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="15 18 9 12 15 6"/>
-                        </svg>
+                        <i class="fas fa-arrow-left"></i>
                         Précédent
                     </button>
+                    <div class="step-indicator">
+                        Étape <span id="currentStepDisplay">1</span>/4
+                    </div>
                     <button id="btnNext" class="btn btn-primary" onclick="nextStep()">
                         Suivant
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9 18 15 12 9 6"/>
-                        </svg>
+                        <i class="fas fa-arrow-right"></i>
                     </button>
-                    <button id="btnCalculate" class="btn btn-primary" onclick="calculateResults()" style="display: none;">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="7" height="7"/>
-                            <rect x="14" y="3" width="7" height="7"/>
-                            <rect x="14" y="14" width="7" height="7"/>
-                            <rect x="3" y="14" width="7" height="7"/>
-                        </svg>
-                        Calculer
+                    <button id="btnCalculate" class="btn btn-success" onclick="calculateResults()" style="display: none;">
+                        <i class="fas fa-calculator"></i>
+                        Calculer définitivement
                     </button>
                 </div>
             </div>
@@ -427,96 +377,160 @@
                 <div class="results-header">
                     <div class="results-title">
                         <div class="logo-small">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
-                            </svg>
+                            <i class="fas fa-snowflake"></i>
                         </div>
                         <div>
-                            <h1>Résultats du calcul</h1>
-                            <p id="projectNameDisplay"></p>
+                            <h1>Résultats du dimensionnement</h1>
+                            <p id="projectNameDisplay" class="project-name">Nom du projet</p>
+                            <p class="results-date" id="resultsDate"></p>
                         </div>
                     </div>
                     <div class="results-actions">
                         <button class="btn btn-outline" onclick="window.print()">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="6 9 6 2 18 2 18 9"/>
-                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                                <rect x="6" y="14" width="12" height="8"/>
-                            </svg>
-                            Imprimer / Exporter
+                            <i class="fas fa-print"></i>
+                            Imprimer
                         </button>
-                        <button class="btn btn-primary" onclick="goHome()">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                            </svg>
+                        <button class="btn btn-outline" onclick="exportToPDF()">
+                            <i class="fas fa-file-pdf"></i>
+                            PDF
+                        </button>
+                        <button class="btn btn-primary" onclick="startNewCalculation()">
+                            <i class="fas fa-plus-circle"></i>
                             Nouveau calcul
                         </button>
                     </div>
                 </div>
 
                 <!-- Puissance totale -->
-                <div class="total-power">
-                    <div class="card-header">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="20" x2="12" y2="10"/>
-                            <line x1="18" y1="20" x2="18" y2="4"/>
-                            <line x1="6" y1="20" x2="6" y2="16"/>
-                        </svg>
-                        Puissance frigorifique totale nécessaire
+                <div class="total-power-card">
+                    <div class="power-header">
+                        <i class="fas fa-bolt"></i>
+                        <h2>Puissance frigorifique nécessaire</h2>
                     </div>
-                    <div class="power-value" id="totalPower">0.00 kW</div>
-                    <p class="power-subtitle">Basé sur les paramètres saisis</p>
+                    <div class="power-value" id="totalPower">0.00</div>
+                    <div class="power-unit">kilowatts (kW)</div>
+                    <div class="power-details">
+                        <div class="detail-item">
+                            <span>Sur 24 heures</span>
+                            <strong id="dailyEnergy">0.00 kWh</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>Pour le dimensionnement</span>
+                            <strong id="designPower">0.00 kW</strong>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Graphique et tableau -->
                 <div class="results-grid">
                     <!-- Graphique -->
-                    <div class="card">
-                        <div class="card-header">Répartition des besoins frigorifiques</div>
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-pie"></i>
+                            Répartition des besoins frigorifiques
+                        </div>
                         <div class="chart-container">
                             <canvas id="pieChart"></canvas>
                         </div>
+                        <div class="chart-legend" id="chartLegend"></div>
                     </div>
 
                     <!-- Tableau -->
-                    <div class="card">
+                    <div class="card table-card">
                         <div class="card-header">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
-                                <line x1="16" y1="13" x2="8" y2="13"/>
-                                <line x1="16" y1="17" x2="8" y2="17"/>
-                                <polyline points="10 9 9 9 8 9"/>
-                            </svg>
-                            Tableau récapitulatif
+                            <i class="fas fa-table"></i>
+                            Détail des contributions thermiques
                         </div>
-                        <table class="results-table" id="resultsTable">
-                            <thead>
-                                <tr>
-                                    <th>Poste</th>
-                                    <th class="text-right">Puissance (kW)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="results-table" id="resultsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Source de chaleur</th>
+                                        <th class="text-right">Puissance (kW)</th>
+                                        <th class="text-right">Part (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rempli dynamiquement -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total nécessaire</th>
+                                        <th class="text-right" id="tableTotal">0.00 kW</th>
+                                        <th class="text-right">100%</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Détails du projet -->
-                <div class="card">
-                    <div class="card-header">Détails du projet</div>
-                    <div class="details-grid" id="projectDetails"></div>
+                <!-- Détails techniques -->
+                <div class="card details-card">
+                    <div class="card-header">
+                        <i class="fas fa-clipboard-list"></i>
+                        Détails techniques du projet
+                    </div>
+                    <div class="details-grid" id="technicalDetails">
+                        <!-- Rempli dynamiquement -->
+                    </div>
                 </div>
 
-                <!-- Note pédagogique -->
-                <div class="info-box">
-                    <p>📚 <strong>Note :</strong> Ces résultats sont basés sur des formules simplifiées pour le dimensionnement d'une chambre frigorifique intérieure.</p>
+                <!-- Recommandations -->
+                <div class="card recommendations-card">
+                    <div class="card-header">
+                        <i class="fas fa-tools"></i>
+                        Recommandations
+                    </div>
+                    <div class="recommendations-content">
+                        <div class="recommendation">
+                            <i class="fas fa-temperature-low"></i>
+                            <div>
+                                <h4>Dimensionnement du groupe froid</h4>
+                                <p>Prévoyez une puissance de <strong id="recommendedPower">0.00 kW</strong> pour votre groupe frigorifique, incluant une marge de sécurité de 15%.</p>
+                            </div>
+                        </div>
+                        <div class="recommendation">
+                            <i class="fas fa-leaf"></i>
+                            <div>
+                                <h4>Optimisation énergétique</h4>
+                                <p>Une bonne isolation réduit de 30% la consommation. Vérifiez l'étanchéité des portes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="results-actions-bottom">
+                    <button class="btn btn-outline" onclick="goHome()">
+                        <i class="fas fa-home"></i>
+                        Retour à l'accueil
+                    </button>
+                    <button class="btn btn-primary" onclick="modifyCalculation()">
+                        <i class="fas fa-edit"></i>
+                        Modifier ce calcul
+                    </button>
+                    <button class="btn btn-success" onclick="saveAsNewCalculation()">
+                        <i class="fas fa-copy"></i>
+                        Dupliquer ce calcul
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Chargement -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner">
+                <i class="fas fa-snowflake fa-spin"></i>
+            </div>
+            <p>Calcul en cours...</p>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
 
     <script src="app.js"></script>
 </body>
